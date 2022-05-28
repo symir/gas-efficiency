@@ -19,16 +19,15 @@ const PriceTable = (props) => {
                     let distanceKm = (props.distance(props.userLocation, item.geo)/1000).toFixed(2); // distance to location in kilometers
 
                     return(
-                    
-                    <tr key={index}>
-                    <td>{item.name}</td>
-                    <td>{item.bensin95}kr</td>
-                    <td>{distanceKm}km</td>
-                    {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
-                        ? <td>{ Math.round(distanceLiters*item.bensin95)}kr</td>
-                        : <td></td>
-                    }
-                    </tr>
+                        <tr key={index}>
+                        <td>{item.name}</td>
+                        <td>{item.bensin95}kr</td>
+                        <td>{distanceKm}km</td>
+                        {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
+                            ? <td>{ Math.round(distanceLiters*item.bensin95)}kr</td>
+                            : <td></td>
+                        }
+                        </tr>
                     )
                 })}
 
@@ -95,14 +94,3 @@ const PriceTable = (props) => {
 };
 
 export default PriceTable;
-
-/* 
-    let distanceLiters = props.distance(props.userLocation, item.geo)*props.kml/100000; // distance to location in liters consumed
-    let distanceKm = (props.distance(props.userLocation, item.geo)/1000).toFixed(2); // distance to location in kilometers
-    let currentTankLiters = (props.tankMax * (props.tankCurrent / 100))-distanceLiters; // remaining fuel in tank once location is reached
-    let costToFill = ((props.tankMax - currentTankLiters) * item.bensin95).toFixed(2); // cost of filling the tank once location is reached
-
-    ((props.tankMax - ((props.tankMax * (props.tankCurrent / 100))-(props.distance(props.userLocation, a.geo)*props.kml/100000))) * a.bensin95)
-    - ((props.tankMax - ((props.tankMax * (props.tankCurrent / 100))-(props.distance(props.userLocation, n.geo)*props.kml/100000))) * n.bensin95)
-
-*/

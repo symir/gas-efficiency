@@ -6,17 +6,15 @@ import PriceTable from './components/PriceTable';
 
 const App = () => {
 
+  // useState constants are used to, well, maintain states.
   const [stateKml, setKml] = useState(); // State for fuel efficiency input
   const [stateTankMax, setTankMax] = useState(); // State for fuel efficiency input
   const [stateTankCurrent, setTankCurrent] = useState(); // State for fuel efficiency input
-
   const [stateUserLocation, setUserLocation] = useState({}); // State for user geolocation
-
   const [stateLocations, setLocations] = useState(); // State for list of locations from the API
-
   const [stateExpandedToggle, setExpandedToggle] = useState(false);
 
-  useEffect (() => { // Fetches objects from API and sets to stateLocations. Runs once, to avoid getting blacklisted by the API during extensive testing...
+  useEffect (() => { // Fetches objects from API and sets to stateLocations. Runs once, to avoid getting blacklisted by the API's server during extensive testing...
     const GetAllLocations = async () =>
     {
       const response = await axios.get("https://apis.is/petrol")
@@ -105,7 +103,7 @@ const App = () => {
                   <label htmlFor="inputKml">Fuel economy (100km/L): </label><br />
                   <input type="number" name="inputKml" onChange={handleKmlChange}></input>
                 </div>
-                {stateExpandedToggle && // if "Expanded Mode" is enabled, two more inputs are added: Max Tank in liters and Current Tank in percentages
+                {stateExpandedToggle && // if "Expanded Mode" is enabled, two more inputs become visible: Max Tank in liters and Current Tank in percentages
                   <>
                     <div className="col-md-auto">
                       <label htmlFor="inputMaxTank">Fuel Max Tank Size (L): </label><br />
