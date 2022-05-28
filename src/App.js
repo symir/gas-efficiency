@@ -2,23 +2,30 @@ import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import PriceTable from './components/PriceTable';
 
 const App = () => {
 
-  const [stateKml, setKml] = useState();
-  const [stateUserLocation, setUserLocation] = useState({});
+  const [stateKml, setKml] = useState(); // State for fuel efficiency input
+  const [stateTankMax, setTankMax] = useState(); // State for fuel efficiency input
+  const [stateTankCurrent, setTankCurrent] = useState(); // State for fuel efficiency input
 
-  const [stateLocations, setLocations] = useState(); // List of all locations from the API
+  const [stateUserLocation, setUserLocation] = useState({}); // State for user geolocation
 
-  useEffect (() => { // Fetches objects from API, runs only once
+  const [stateLocations, setLocations] = useState(); // State for list of locations from the API
+
+  const [stateExpandedToggle, setExpandedToggle] = useState(false);
+
+  useEffect (() => { // Fetches objects from API, runs only once. 
     const GetAllLocations = async () =>
     {
       const response = await axios.get("https://apis.is/petrol")
       setLocations(response.data.results)
-      console.log(response.data.results);
     } 
     GetAllLocations();
+  }, []);
 
+  useEffect (() => {
     if ("geolocation" in navigator) {
       console.log("Available");
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -39,11 +46,33 @@ const App = () => {
     setKml(e.target.value)
   }
 
+  const handleSecondaryToggle = () => {
+    console.log(stateExpandedToggle);
+    if (stateExpandedToggle == true) {
+      setExpandedToggle(false);
+      console.log("set false");
+    }
+    else if (stateExpandedToggle == false) {
+      setExpandedToggle(true)
+      console.log("set true");
+    }
+  }
+
+  const handleTankMaxChange = (e) => {
+    setTankMax(e.target.value)
+  }
+  const handleTankCurrentChange = (e) => {
+    setTankCurrent(e.target.value)
+  }
+
   function calculateDistance (locationA, locationB){
     const lat1 = locationA.lat;
     const lat2 = locationB.lat;
     const lon1 = locationA.lon;
     const lon2 = locationB.lon;
+
+    // This basic Haversine JavaScript implementation is by Chris Veness, found here: https://www.movable-type.co.uk/scripts/latlong.html
+    // Whole thing is a brilliant reference for all things spherical
 
     const R = 6371e3; // metres
     const φ1 = lat1 * Math.PI/180; // φ, λ in radians
@@ -62,36 +91,48 @@ const App = () => {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <form>
-          <label>Fuel economy (100km/L): </label>
-          <input type="number" onChange={handleKmlChange}></input>
-        </form>
-        <table className="table table-dark">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Location</th>
-              <th scope="col">Price</th>
-              <th scope="col">Distance</th>
-              <th scope="col">Cost of visit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stateLocations && stateLocations.sort((a,b)=> {return a.bensin95 - b.bensin95}).map((item, index) => ( // Check if state is not empty, then sorts stateLocations by bensin95 (price), and maps it for rendering
-              <tr>
-                <th scope="row">{index}</th>
-                <td>{item.name}</td>
-                <td>{item.bensin95}kr</td>
-                <td>{(calculateDistance(stateUserLocation, item.geo)/1000).toFixed(2)}km</td>
-                {stateKml && <td>{ Math.round(calculateDistance(stateUserLocation, item.geo)*stateKml/100000*item.bensin95)}kr</td>}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </header>
-    </div>
+    <div className="container">
+      <div className="row">
+        <div className="col">
+          {stateExpandedToggle==true 
+            ? <div class="btn btn-primary" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
+            : <div class="btn btn-secondary" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
+          }
+        </div>
+        <div className="col">
+          <div className="form-group">
+          <div className="col">
+            <label for="inputKml">Fuel economy (100km/L): </label>
+            <input type="number" name="inputKml" onChange={handleKmlChange}></input>
+            </div>
+            {stateExpandedToggle && 
+              <>
+                <div className="col">
+                  <label for="inputMaxTank">Fuel Max Tank Size (L): </label>
+                  <input type="number" name="inputMaxTank" onChange={handleTankMaxChange}></input>
+                </div>
+                <div className="col">
+                  <label for="inputCurrentTank">Fuel In Tank (%): </label>
+                  <input type="number" name="inputCurrentTank" min="1" max="100" onChange={handleTankCurrentChange}></input>
+                </div>
+              </>
+            }
+          </div>
+        </div>
+      </div>
+      <div className="Row">
+        {stateLocations &&
+            <PriceTable 
+              expanded={stateExpandedToggle}
+              locations={stateLocations}
+              userLocation={stateUserLocation}
+              kml={stateKml}
+              tankMax={stateTankMax}
+              tankCurrent={stateTankCurrent}
+              distance={calculateDistance} // pass calculateDistance as prop to component, allowing it to use the function as prop.distance
+            />
+        }
+    </div></div>
   );
 }
 
