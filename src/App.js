@@ -8,7 +8,12 @@ const App = () => {
   const [stateKml, setKml] = useState();
   const [stateUserLocation, setUserLocation] = useState([64.14763743425488, -21.960130056300454]);
   const [stateTargetLocation, setTargetLocation] = useState([64.12620617947846, -21.8214996789342]);
-  const [stateLocations, setLocations] = useState();
+
+  const [stateLocations, setLocations] = useState(); // List of all locations from the API
+  const [stateDistance, setDistance] = useState();
+
+  const [stateCompanies, setCompanies] = useState();
+  const [stateSelectedCompany, setSelectedCompany] = useState();
 
   useEffect (() => { // Fetches objects from API, runs only once
     const GetAllLocations = async () =>
@@ -23,6 +28,7 @@ const App = () => {
       })
       console.log(response.data.results);
       console.log(companies);
+      setCompanies(companies);
     } 
     GetAllLocations();
 
@@ -33,10 +39,15 @@ const App = () => {
 
   }
 
+  const handleSellerChange = (e) => {
+    setSelectedCompany(e.target.value);
+  }
+
   const handleCalculateDistance = event => {
     var dist = calculateDistance(stateUserLocation, stateTargetLocation)
     console.log("Distance: ");
     console.log(dist)
+    setDistance(dist)
   }
 
   function calculateDistance (locationA, locationB){
@@ -68,9 +79,27 @@ const App = () => {
           <label>gas efficiency (L/100km)</label>
           <input type="number" onChange={handleKmlChange}></input>
         </form>
+        <label>Companies: </label>
+        <select 
+          name="sellers" 
+          id="sellers"
+          onChange={(e) => handleSellerChange(e)}
+        >
+          {stateCompanies && stateCompanies.map((item)=> (
+            <option value={item}>{item}</option>
+          ))}
+        </select>
+        {stateSelectedCompany && stateLocations.filter(loc => loc.company === stateSelectedCompany).map((item) => (
+          <div>
+            <p>
+              {item.name}, {item.bensin95}kr
+            </p>
+          </div>
+        ))}
         <br />
           <p>GeoLoc: {stateUserLocation[0]}, {stateUserLocation[1]}</p>
           <br />
+          <p>Distance: {stateDistance && Math.round(stateDistance)}km</p>
           <button onClick={handleCalculateDistance}>Calculate Distance</button>
       </header>
     </div>
