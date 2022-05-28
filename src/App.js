@@ -23,11 +23,11 @@ const App = () => {
       setLocations(response.data.results)
     } 
     GetAllLocations();
-  }, []);
+  });
 
   useEffect (() => {
     if ("geolocation" in navigator) {
-      console.log("Available");
+      console.log("Geolocation Available");
       navigator.geolocation.getCurrentPosition(function(position) {
         setUserLocation({
           lat: position.coords.latitude,
@@ -36,9 +36,8 @@ const App = () => {
       });
 
     } else {
-      console.log("Not Available");
+      console.log("Geolocation Not Available");
     }
-
   }, []);
 
 
@@ -94,30 +93,34 @@ const App = () => {
     <div className="container">
       <div className="row">
         <div className="col">
-          {stateExpandedToggle==true 
-            ? <div class="btn btn-primary" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
-            : <div class="btn btn-secondary" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
-          }
-        </div>
-        <div className="col">
-          <div className="form-group">
-          <div className="col">
-            <label for="inputKml">Fuel economy (100km/L): </label>
-            <input type="number" name="inputKml" onChange={handleKmlChange}></input>
+          <form>
+            <div className="form-group">
+              <div className="row justify-content-start">
+                <div className="col-md-auto align-self-end">
+                  {stateExpandedToggle==true 
+                    ? <div className="btn btn-primary active" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
+                    : <div className="btn btn-secondary" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
+                  }
+                </div>
+                <div className="col-md-auto">
+                  <label htmlFor="inputKml">Fuel economy (100km/L): </label><br />
+                  <input type="number" name="inputKml" onChange={handleKmlChange}></input>
+                </div>
+                {stateExpandedToggle && // if "Expanded Mode" is enabled, two more inputs are added: Max Tank in liters and Current Tank in percentages
+                  <>
+                    <div className="col-md-auto">
+                      <label htmlFor="inputMaxTank">Fuel Max Tank Size (L): </label><br />
+                      <input type="number" name="inputMaxTank" onChange={handleTankMaxChange}></input>
+                    </div>
+                    <div className="col-md-auto">
+                      <label htmlFor="inputCurrentTank">Fuel In Tank (%): </label><br />
+                      <input type="number" name="inputCurrentTank" min="1" max="100" onChange={handleTankCurrentChange}></input>
+                    </div>
+                  </>
+                }
+              </div>
             </div>
-            {stateExpandedToggle && 
-              <>
-                <div className="col">
-                  <label for="inputMaxTank">Fuel Max Tank Size (L): </label>
-                  <input type="number" name="inputMaxTank" onChange={handleTankMaxChange}></input>
-                </div>
-                <div className="col">
-                  <label for="inputCurrentTank">Fuel In Tank (%): </label>
-                  <input type="number" name="inputCurrentTank" min="1" max="100" onChange={handleTankCurrentChange}></input>
-                </div>
-              </>
-            }
-          </div>
+          </form>
         </div>
       </div>
       <div className="Row">
