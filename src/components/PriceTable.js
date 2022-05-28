@@ -20,7 +20,7 @@ const PriceTable = (props) => {
 
                     return(
                         <tr key={index}>
-                        <td>{item.name}</td>
+                        <td>{item.name} - {item.company}</td>
                         <td>{item.bensin95}kr</td>
                         <td>{distanceKm}km</td>
                         {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
@@ -61,7 +61,7 @@ const PriceTable = (props) => {
 
                         return(
                             <tr key={index}>
-                                <td>{item.name}</td>
+                                <td>{item.name} - {item.company}</td>
                                 <td>{item.bensin95}kr</td>
                                 <td>{distanceKm}km</td>
                                 {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
