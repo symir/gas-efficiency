@@ -16,14 +16,14 @@ const App = () => {
 
   const [stateExpandedToggle, setExpandedToggle] = useState(false);
 
-  useEffect (() => { // Fetches objects from API and sets to stateLocations
+  useEffect (() => { // Fetches objects from API and sets to stateLocations. Runs once, to avoid getting blacklisted by the API during extensive testing...
     const GetAllLocations = async () =>
     {
       const response = await axios.get("https://apis.is/petrol")
       setLocations(response.data.results)
     } 
     GetAllLocations();
-  });
+  }, []);
 
   useEffect (() => { // checks if geolocation is enabled in user's browser, prompts for permission
     if ("geolocation" in navigator) {
