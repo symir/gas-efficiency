@@ -6,7 +6,7 @@ import axios from "axios";
 const App = () => {
 
   const [stateKml, setKml] = useState();
-  const [stateUserLocation, setUserLocation] = useState({lat: 64.14763743425488, lon: -21.960130056300454});
+  const [stateUserLocation, setUserLocation] = useState({});
 
   const [stateLocations, setLocations] = useState(); // List of all locations from the API
 
@@ -18,6 +18,19 @@ const App = () => {
       console.log(response.data.results);
     } 
     GetAllLocations();
+
+    if ("geolocation" in navigator) {
+      console.log("Available");
+      navigator.geolocation.getCurrentPosition(function(position) {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        });
+      });
+
+    } else {
+      console.log("Not Available");
+    }
 
   }, []);
 
@@ -54,10 +67,6 @@ const App = () => {
         <form>
           <label>Fuel economy (100km/L): </label>
           <input type="number" onChange={handleKmlChange}></input>
-          
-          <label>
-
-          </label>
         </form>
         <table className="table table-dark">
           <thead>
