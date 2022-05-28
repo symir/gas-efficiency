@@ -2,13 +2,13 @@
 
 Fuel Efficiency Calculator is a simple single-page app in React that calculates prices of gas depending on distance between user and seller locations, and location fuel price. https://apis.is/petrol is used for gas price data.
 
-# Modules and external code
+## Modules and external code
 
 Bootstrap is used for CSS. Axios is used to fetch from API. The project also makes use of React's UseState and UseEffects hooks. 
 
 Haversine formula implementation for geolocation distance calculations courtesy of Chris Veness (https://www.movable-type.co.uk/scripts/latlong.html).
 
-# App Functionality
+## App Functionality
 
 List of locations and prices is fetched from the API and sorted by cost of the trip to each location (using distance, efficiency, and location's fuel price). An input at the top of the page allows users to enter their vehicle's fuel efficiency (100km/L)
 
