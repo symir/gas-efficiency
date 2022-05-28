@@ -6,44 +6,31 @@ import axios from "axios";
 const App = () => {
 
   const [stateKml, setKml] = useState();
-  const [stateUserLocation, setUserLocation] = useState([64.14763743425488, -21.960130056300454]);
-  const [stateTargetLocation, setTargetLocation] = useState([64.12620617947846, -21.8214996789342]);
-  const [stateLocations, setLocations] = useState();
+  const [stateUserLocation, setUserLocation] = useState({lat: 64.14763743425488, lon: -21.960130056300454});
+
+  const [stateLocations, setLocations] = useState(); // List of all locations from the API
 
   useEffect (() => { // Fetches objects from API, runs only once
     const GetAllLocations = async () =>
     {
       const response = await axios.get("https://apis.is/petrol")
       setLocations(response.data.results)
-
-      const companies = [];
-      response.data.results.map((item) => {
-         var findItem = companies.find((x) => x === item.company);
-         if(!findItem) companies.push(item.company);
-      })
       console.log(response.data.results);
-      console.log(companies);
     } 
     GetAllLocations();
 
   }, []);
 
 
-  const handleKmlChange = event => {
-
-  }
-
-  const handleCalculateDistance = event => {
-    var dist = calculateDistance(stateUserLocation, stateTargetLocation)
-    console.log("Distance: ");
-    console.log(dist)
+  const handleKmlChange = (e) => {
+    setKml(e.target.value)
   }
 
   function calculateDistance (locationA, locationB){
-    const lat1 = locationA[0];
-    const lat2 = locationB[0];
-    const lon1 = locationA[1];
-    const lon2 = locationB[1];
+    const lat1 = locationA.lat;
+    const lat2 = locationB.lat;
+    const lon1 = locationA.lon;
+    const lon2 = locationB.lon;
 
     const R = 6371e3; // metres
     const φ1 = lat1 * Math.PI/180; // φ, λ in radians
@@ -65,13 +52,35 @@ const App = () => {
     <div className="App">
       <header className="App-header">
         <form>
-          <label>gas efficiency (L/100km)</label>
+          <label>Fuel economy (100km/L): </label>
           <input type="number" onChange={handleKmlChange}></input>
+          
+          <label>
+
+          </label>
         </form>
-        <br />
-          <p>GeoLoc: {stateUserLocation[0]}, {stateUserLocation[1]}</p>
-          <br />
-          <button onClick={handleCalculateDistance}>Calculate Distance</button>
+        <table className="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Location</th>
+              <th scope="col">Price</th>
+              <th scope="col">Distance</th>
+              <th scope="col">Cost of visit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stateLocations && stateLocations.sort((a,b)=> {return a.bensin95 - b.bensin95}).map((item, index) => ( // Check if state is not empty, then sorts stateLocations by bensin95 (price), and maps it for rendering
+              <tr>
+                <th scope="row">{index}</th>
+                <td>{item.name}</td>
+                <td>{item.bensin95}kr</td>
+                <td>{(calculateDistance(stateUserLocation, item.geo)/1000).toFixed(2)}km</td>
+                {stateKml && <td>{ Math.round(calculateDistance(stateUserLocation, item.geo)*stateKml/100000*item.bensin95)}kr</td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </header>
     </div>
   );
