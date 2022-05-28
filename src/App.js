@@ -16,7 +16,7 @@ const App = () => {
 
   const [stateExpandedToggle, setExpandedToggle] = useState(false);
 
-  useEffect (() => { // Fetches objects from API, runs only once. 
+  useEffect (() => { // Fetches objects from API and sets to stateLocations
     const GetAllLocations = async () =>
     {
       const response = await axios.get("https://apis.is/petrol")
@@ -25,11 +25,11 @@ const App = () => {
     GetAllLocations();
   });
 
-  useEffect (() => {
+  useEffect (() => { // checks if geolocation is enabled in user's browser, prompts for permission
     if ("geolocation" in navigator) {
       console.log("Geolocation Available");
-      navigator.geolocation.getCurrentPosition(function(position) {
-        setUserLocation({
+      navigator.geolocation.getCurrentPosition(function(position) { // sets user location in stateUserLocation
+        setUserLocation({ 
           lat: position.coords.latitude,
           lon: position.coords.longitude
         });
@@ -41,26 +41,24 @@ const App = () => {
   }, []);
 
 
-  const handleKmlChange = (e) => {
+  const handleKmlChange = (e) => { // updates stateKml whenever the input for fuel efficiency is changed
     setKml(e.target.value)
   }
 
-  const handleSecondaryToggle = () => {
+  const handleSecondaryToggle = () => { // toggles "Expanded Mode" true or false
     console.log(stateExpandedToggle);
     if (stateExpandedToggle == true) {
       setExpandedToggle(false);
-      console.log("set false");
     }
     else if (stateExpandedToggle == false) {
       setExpandedToggle(true)
-      console.log("set true");
     }
   }
 
-  const handleTankMaxChange = (e) => {
+  const handleTankMaxChange = (e) => { // updates stateTankMax whenever input for fuel tank max volume is changed
     setTankMax(e.target.value)
   }
-  const handleTankCurrentChange = (e) => {
+  const handleTankCurrentChange = (e) => { // updates stateTankCurrent whenever input for fuel tank current volume is changed
     setTankCurrent(e.target.value)
   }
 
@@ -89,15 +87,16 @@ const App = () => {
     return d;
   }
 
+  // Bootstrap CSS is applied to elements by using the className field, and the Grid layout system uses row and col to place elements
   return (
-    <div className="container">
+    <div className="container"> 
       <div className="row">
         <div className="col">
           <form>
             <div className="form-group">
               <div className="row justify-content-start">
                 <div className="col-md-auto align-self-end">
-                  {stateExpandedToggle==true 
+                  {stateExpandedToggle==true // Toggle button for "Expanded Mode"
                     ? <div className="btn btn-primary active" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
                     : <div className="btn btn-secondary" type="submit" onClick={handleSecondaryToggle}>Expanded mode</div>
                   }
@@ -124,18 +123,19 @@ const App = () => {
         </div>
       </div>
       <div className="Row">
-        {stateLocations &&
+        {stateLocations && // If locations were successfully retrieved from API the table is rendered
             <PriceTable 
-              expanded={stateExpandedToggle}
-              locations={stateLocations}
-              userLocation={stateUserLocation}
-              kml={stateKml}
-              tankMax={stateTankMax}
-              tankCurrent={stateTankCurrent}
+              expanded={stateExpandedToggle} // "Expanded Mode" adds two columns: Fuel Remaining and Cost to Fill
+              locations={stateLocations} // Locations from API
+              userLocation={stateUserLocation} // User geolocation
+              kml={stateKml} // Vehicle's fuel efficiency
+              tankMax={stateTankMax} // Vehicle's fuel tank size
+              tankCurrent={stateTankCurrent} // Vehicle's current fuel amount in tank (in percentages)
               distance={calculateDistance} // pass calculateDistance as prop to component, allowing it to use the function as prop.distance
             />
         }
-    </div></div>
+      </div>
+    </div>
   );
 }
 
