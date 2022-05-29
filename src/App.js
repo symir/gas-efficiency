@@ -38,24 +38,31 @@ const App = () => {
     }
   }, []);
 
-  const handleKmlChange = (e) => { // updates stateKml whenever the input for fuel efficiency is changed
-    setKml(e.target.value)
+  const handleKmlChange = (e) => { // updates stateKml whenever the input for fuel efficiency is changed. Input range limited to positive numbers
+    if (e.target.value < 0){
+      setKml(0);
+    } else {
+      setKml(e.target.value);
+    }
   }
 
   const handleSecondaryToggle = () => { // toggles "Expanded Mode" true or false
     if (stateExpandedToggle == true) {
       setExpandedToggle(false);
-    }
-    else if (stateExpandedToggle == false) {
+    } else if (stateExpandedToggle == false) {
       setExpandedToggle(true)
     }
   }
 
-  const handleTankMaxChange = (e) => { // updates stateTankMax whenever input for fuel tank max volume is changed
-    setTankMax(e.target.value)
+  const handleTankMaxChange = (e) => { // updates stateTankMax whenever input for fuel tank max volume is changed. Input range limited to positive numbers
+    if (e.target.value < 0){
+      setTankMax(0);
+    } else {
+      setTankMax(e.target.value)
+    }
   }
 
-  const handleTankCurrentChange = (e) => { // updates stateTankCurrent whenever input for fuel tank current volume is changed. Limits inputs to range between 0 and 100%.
+  const handleTankCurrentChange = (e) => { // updates stateTankCurrent whenever input for fuel tank current volume is changed. Input range limited to between 0 and 100.
     if (e.target.value > 100){
       setTankCurrent(100);
     } else if (e.target.value < 0){
