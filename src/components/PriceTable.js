@@ -2,6 +2,34 @@ import React from 'react'
 
 const PriceTable = (props) => {
     let expanded = props.expanded;
+    let locations = [];
+
+    props.locations.forEach((item)=>{   // every time the component renders, the app threads through each item in the array and 
+                                        // adds calculations based on geolocation and price. Doing this here allows for easier sorting
+                                        // and less mess in the render.
+        
+        let locationDistance = props.distance(props.userLocation, item.geo)/1000; // distance to location in kilometers
+        let locationFuelSpent = (locationDistance*props.kml)/100; // how much fuel will be spent reaching location in liters
+        let locationFuelLeft = (props.tankMax * (props.tankCurrent / 100))-(locationFuelSpent); // remaining fuel in tank once location is reached
+        let locationCostToFill = ((props.tankMax - locationFuelLeft) * item.bensin95); // cost of filling the tank once location is reached
+        let locationTripCost = (locationFuelSpent*item.bensin95); // cost of the trip from user's location to the station
+
+        let location = { // create new object, transfer values from the original object, and add calculated values
+            name: item.name,
+            company: item.company,
+            price: item.bensin95,
+            geo: item.geo,
+            distance: locationDistance,
+            distanceLiters: locationFuelSpent,
+            tripCost: locationTripCost,
+            fuelLeft: locationFuelLeft, 
+            costToFill: locationCostToFill
+        };
+
+        locations.push(location); // the new object is finally added to the locations array
+    });
+
+    console.log(locations);
     return(
         <> {expanded == false ? // normal version, strictly by requirements
             <table className="table">
@@ -14,17 +42,15 @@ const PriceTable = (props) => {
                 </tr>
                 </thead>
                 <tbody>
-                {props.locations.sort((a,b)=> {return (((props.distance(props.userLocation, a.geo)*props.kml/100000)*a.bensin95) - ((props.distance(props.userLocation, b.geo)*props.kml/100000)*b.bensin95))}).map((item, index) => { // sorts locations by cost of trip (fuel, efficiency, distance), and maps it for rendering
-                    let distanceLiters = props.distance(props.userLocation, item.geo)*props.kml/100000; // distance to location in liters consumed
-                    let distanceKm = (props.distance(props.userLocation, item.geo)/1000).toFixed(2); // distance to location in kilometers
+                {locations.sort((a,b)=> {return a.tripCost - b.tripCost}).map((item, index) => { // sorts locations by cost of trip, and maps the array for rendering
 
                     return(
                         <tr key={index}>
                         <td>{item.name} - {item.company}</td>
-                        <td>{item.bensin95}kr</td>
-                        <td>{distanceKm}km</td>
+                        <td>{item.price}kr</td>
+                        <td>{item.distance.toFixed(2)}km</td>
                         {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
-                            ? <td>{ Math.round(distanceLiters*item.bensin95)}kr</td>
+                            ? <td>{(Math.round(item.tripCost))}kr</td>
                             : <td></td>
                         }
                         </tr>
@@ -43,39 +69,28 @@ const PriceTable = (props) => {
                         <th scope="col">Price</th>
                         <th scope="col">Distance</th>
                         <th scope="col">Cost of Trip</th>
-                        <th scope="col">Fuel Remaining</th>
                         <th scope="col">Cost to Fill</th>
                     </tr>
                 </thead>
                 <tbody>
 
 
-                {props.locations.sort((a,b)=> {return ( // sorts by cost to fill, and maps for rendering. Dense, and violates DRY, but works. Refactor would likely involve pulling all of this logic out of Return()
-                          ((props.tankMax - ((props.tankMax * (props.tankCurrent / 100))-(props.distance(props.userLocation, a.geo)*props.kml/100000))) * a.bensin95)
-                        - ((props.tankMax - ((props.tankMax * (props.tankCurrent / 100))-(props.distance(props.userLocation, b.geo)*props.kml/100000))) * b.bensin95)
-                    )}).map((item, index) => {
-                        let distanceLiters = props.distance(props.userLocation, item.geo)*props.kml/100000; // distance to location in liters consumed
-                        let distanceKm = (props.distance(props.userLocation, item.geo)/1000).toFixed(2); // distance to location in kilometers
-                        let currentTankLiters = (props.tankMax * (props.tankCurrent / 100))-distanceLiters; // remaining fuel in tank once location is reached
-                        let costToFill = ((props.tankMax - currentTankLiters) * item.bensin95).toFixed(2); // cost of filling the tank once location is reached
-
+                {locations.sort((a,b)=> {return (a.costToFill -b.costToFill )}).map((item, index) => { // sorts by cost to fill, and maps for rendering.
                         return(
                             <tr key={index}>
                                 <td>{item.name} - {item.company}</td>
-                                <td>{item.bensin95}kr</td>
-                                <td>{distanceKm}km</td>
+                                <td>{item.price}kr</td>
+                                <td>{item.distance.toFixed(2)}km</td>
                                 {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
-                                    ? <td>{ Math.round(distanceLiters*item.bensin95)}kr</td>
+                                    ? <td>{(Math.round(item.tripCost))}kr</td>
                                     : <td></td>
                                 }
                                 {(props.tankMax && props.tankCurrent) ? // Ternary checks if tank values have been entered. Nesting ternaries is a sin but I'm not sorry
-                                    currentTankLiters.toFixed(2) > 0 // Ternary approximates how much fuel will be left in the tank after the trip, renders red if user does not have enough fuel (negative value)
+                                    item.fuelLeft.toFixed(2) > 0 // Ternary approximates how much fuel will be left in the tank after the trip, renders red if user does not have enough fuel (negative value)
                                         ? <>
-                                            <td><p>{currentTankLiters.toFixed(3)}L</p></td>
-                                            <td>{costToFill}</td>
+                                            <td>{Math.round(item.costToFill)}</td>
                                         </>
                                         : <>
-                                            <td><p className="text-danger">{currentTankLiters.toFixed(3)}L</p></td>
                                             <td><p className="text-danger">Out of range</p></td>
                                             </>
                             : <>
