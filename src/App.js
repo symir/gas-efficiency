@@ -7,9 +7,9 @@ import PriceTable from './components/PriceTable';
 const App = () => {
 
   // useState constants are used to, well, maintain states.
-  const [stateKml, setKml] = useState(); // State for fuel efficiency input
-  const [stateTankMax, setTankMax] = useState(); // State for fuel efficiency input
-  const [stateTankCurrent, setTankCurrent] = useState(); // State for fuel efficiency input
+  const [stateKml, setKml] = useState(''); // State for fuel efficiency input
+  const [stateTankMax, setTankMax] = useState(''); // State for fuel efficiency input
+  const [stateTankCurrent, setTankCurrent] = useState(''); // State for fuel efficiency input
   const [stateUserLocation, setUserLocation] = useState({}); // State for user geolocation
   const [stateLocations, setLocations] = useState(); // State for list of locations from the API
   const [stateExpandedToggle, setExpandedToggle] = useState(false);
@@ -55,8 +55,14 @@ const App = () => {
     setTankMax(e.target.value)
   }
 
-  const handleTankCurrentChange = (e) => { // updates stateTankCurrent whenever input for fuel tank current volume is changed
-    setTankCurrent(e.target.value)
+  const handleTankCurrentChange = (e) => { // updates stateTankCurrent whenever input for fuel tank current volume is changed. Limits inputs to range between 0 and 100%.
+    if (e.target.value > 100){
+      setTankCurrent(100);
+    } else if (e.target.value < 0){
+      setTankCurrent(0);
+    } else {
+      setTankCurrent(e.target.value)
+    }
   }
 
   const handleIgnoreSubmit = (e) => {
@@ -104,17 +110,17 @@ const App = () => {
                 </div>
                 <div className="col-md-auto">
                   <label htmlFor="inputKml">Fuel economy (100km/L): </label><br />
-                  <input type="number" name="inputKml" onChange={handleKmlChange}></input>
+                  <input type="number" name="inputKml" onChange={handleKmlChange} value={stateKml}></input>
                 </div>
                 {stateExpandedToggle && // if "Expanded Mode" is enabled, two more inputs become visible: Max Tank in liters and Current Tank in percentages
                   <>
                     <div className="col-md-auto">
                       <label htmlFor="inputMaxTank">Fuel Max Tank Size (L): </label><br />
-                      <input type="number" name="inputMaxTank" onChange={handleTankMaxChange}></input>
+                      <input type="number" name="inputMaxTank" onChange={handleTankMaxChange} value={stateTankMax}></input>
                     </div>
                     <div className="col-md-auto">
                       <label htmlFor="inputCurrentTank">Fuel In Tank (%): </label><br />
-                      <input type="number" name="inputCurrentTank" min="1" max="100" onChange={handleTankCurrentChange}></input>
+                      <input type="number" name="inputCurrentTank" min="1" max="100" onChange={handleTankCurrentChange} value={stateTankCurrent}></input>
                     </div>
                   </>
                 }
