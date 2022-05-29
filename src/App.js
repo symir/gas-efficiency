@@ -44,7 +44,6 @@ const App = () => {
   }
 
   const handleSecondaryToggle = () => { // toggles "Expanded Mode" true or false
-    console.log(stateExpandedToggle);
     if (stateExpandedToggle == true) {
       setExpandedToggle(false);
     }

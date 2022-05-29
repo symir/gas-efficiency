@@ -29,7 +29,6 @@ const PriceTable = (props) => {
         locations.push(location); // the new object is finally added to the locations array
     });
 
-    console.log(locations);
     return(
         <> {expanded == false ? // normal version, strictly by requirements
             <table className="table">
