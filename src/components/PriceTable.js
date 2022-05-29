@@ -74,7 +74,7 @@ const PriceTable = (props) => {
                 <tbody>
 
 
-                {locations.sort((a,b)=> {return (a.costToFill -b.costToFill )}).map((item, index) => { // sorts by cost to fill, and maps for rendering.
+                {locations.sort((a,b)=> {return (a.costToFill - b.costToFill )}).map((item, index) => { // sorts by cost to fill, and maps for rendering.
                         return(
                             <tr key={index}>
                                 <td>{item.name} - {item.company}</td>
@@ -90,7 +90,7 @@ const PriceTable = (props) => {
                                             <td>{Math.round(item.costToFill).toLocaleString('en-IN')} kr.</td>
                                         </>
                                         : <>
-                                            <td><p className="text-danger">Out of range</p></td>
+                                            <td><div className="text-danger">Out of Range</div></td>
                                             </>
                             : <>
                                 <td></td>
