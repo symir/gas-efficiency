@@ -2,5 +2,7 @@
     "appService.zipIgnorePattern": [
         "node_modules{,/**}",
         ".vscode{,/**}"
-    ]
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/d3ce642f-4df1-465b-b889-ed3979d86dfc/microsoft.web/sites/subscriptions/d3ce642f-4df1-465b-b889-ed3979d86dfc/resourceGroups/rebutiaTest/providers/Microsoft.Web/sites/fuelefficiencycalculator",
+    "appService.deploySubpath": "."
 }

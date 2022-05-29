@@ -123,7 +123,7 @@ const App = () => {
       <div className="Row">
         {stateLocations && // If locations were successfully retrieved from API the table is rendered
             <PriceTable 
-              expanded={stateExpandedToggle} // "Expanded Mode" adds two columns: Fuel Remaining and Cost to Fill
+              expanded={stateExpandedToggle} // "Expanded Mode" adds Cost to Fill column
               locations={stateLocations} // Locations from API
               userLocation={stateUserLocation} // User geolocation
               kml={stateKml} // Vehicle's fuel efficiency

@@ -47,10 +47,10 @@ const PriceTable = (props) => {
                     return(
                         <tr key={index}>
                         <td>{item.name} - {item.company}</td>
-                        <td>{item.price}kr</td>
-                        <td>{item.distance.toFixed(2)}km</td>
+                        <td>{item.price} kr.</td>
+                        <td>{item.distance.toFixed(2)} km</td>
                         {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
-                            ? <td>{(Math.round(item.tripCost))}kr</td>
+                            ? <td>{(Math.round(item.tripCost)).toLocaleString('en-IN')} kr.</td>
                             : <td></td>
                         }
                         </tr>
@@ -79,16 +79,16 @@ const PriceTable = (props) => {
                         return(
                             <tr key={index}>
                                 <td>{item.name} - {item.company}</td>
-                                <td>{item.price}kr</td>
-                                <td>{item.distance.toFixed(2)}km</td>
+                                <td>{item.price} kr.</td>
+                                <td>{item.distance.toFixed(2)} km</td>
                                 {(props.kml) // Checks if fuel efficiency has been entered, if true then calculate distance and multiply by kml (converted from m to km, and from 100km/l to 1km/l) and location price
-                                    ? <td>{(Math.round(item.tripCost))}kr</td>
+                                    ? <td>{(Math.round(item.tripCost)).toLocaleString('en-IN')} kr.</td>
                                     : <td></td>
                                 }
                                 {(props.tankMax && props.tankCurrent) ? // Ternary checks if tank values have been entered. Nesting ternaries is a sin but I'm not sorry
                                     item.fuelLeft.toFixed(2) > 0 // Ternary approximates how much fuel will be left in the tank after the trip, renders red if user does not have enough fuel (negative value)
                                         ? <>
-                                            <td>{Math.round(item.costToFill)}</td>
+                                            <td>{Math.round(item.costToFill).toLocaleString('en-IN')} kr.</td>
                                         </>
                                         : <>
                                             <td><p className="text-danger">Out of range</p></td>

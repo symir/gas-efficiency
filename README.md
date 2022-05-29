@@ -14,11 +14,10 @@ List of locations and prices is fetched from the API and sorted by cost of the t
 
 Each row displays location name, distance from user's device to location, and cost of the trip.
 
-If "Expanded Mode" is enabled, two additional inputs and two additional columns appear: 
+If "Expanded Mode" is enabled, two additional inputs and two additional columns appear in case you **REALLY** want to optimize your fuel shopping: 
 
 * "Fuel Max Tank Size" is the vehicle's fuel tank size in liters.
 * "Fuel in Tank" is the current amount of fuel in the vehicle (before the trip) in percentages.
-* "Fuel Remaining" displays how much fuel will be left in the tank once a location is reached, using fuel efficiency, distance, and the two fuel tank inputs. If there is not enough fuel to reach the destination, it will display a negative value in red.
-* "Cost to Fill" displays how much it will cost to fill the tank once a location is reached, using location fuel cost, tank size, and remaining fuel in the vehicle's tank. If "Fuel Remaining" is negative, this column will display "Out of Range"
+* "Cost to Fill" displays how much it will cost to fill the tank once a location is reached, using location fuel cost, tank size, and remaining fuel in the vehicle's tank. If the trip requires more fuel than is in the tank, this column will display "Out of Range"
 
-In "Expanded Mode" the list is ordered by Cost to Fill, in case you **REALLY** want to optimize your fuel shopping.
+In "Expanded Mode" the list is ordered by Cost to Fill.
