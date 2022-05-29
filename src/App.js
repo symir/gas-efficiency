@@ -38,7 +38,6 @@ const App = () => {
     }
   }, []);
 
-
   const handleKmlChange = (e) => { // updates stateKml whenever the input for fuel efficiency is changed
     setKml(e.target.value)
   }
@@ -55,8 +54,13 @@ const App = () => {
   const handleTankMaxChange = (e) => { // updates stateTankMax whenever input for fuel tank max volume is changed
     setTankMax(e.target.value)
   }
+
   const handleTankCurrentChange = (e) => { // updates stateTankCurrent whenever input for fuel tank current volume is changed
     setTankCurrent(e.target.value)
+  }
+
+  const handleIgnoreSubmit = (e) => {
+    e.preventDefault();
   }
 
   function calculateDistance (locationA, locationB){
@@ -89,7 +93,7 @@ const App = () => {
     <div className="container"> 
       <div className="row">
         <div className="col">
-          <form>
+          <form onSubmit={handleIgnoreSubmit}>
             <div className="form-group">
               <div className="row justify-content-start">
                 <div className="col-md-auto align-self-end">
