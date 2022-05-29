@@ -18,7 +18,7 @@ If "Expanded Mode" is enabled, two additional inputs and two additional columns 
 
 * "Fuel Max Tank Size" is the vehicle's fuel tank size in liters.
 * "Fuel in Tank" is the current amount of fuel in the vehicle (before the trip) in percentages.
-* "Fuel Remaining" displays how much fuel will be left in the tank once a location is reached, using fuel efficience, distance, and the two fuel tank inputs. If there is not enough fuel to reach the destination, it will display a negative value in red.
-* "Cost to Fill" displays how much it will cost to fill the tank once a location is reached, using location fuel cost, tank size, and remaining fuel in the vehicle's tank. 
+* "Fuel Remaining" displays how much fuel will be left in the tank once a location is reached, using fuel efficiency, distance, and the two fuel tank inputs. If there is not enough fuel to reach the destination, it will display a negative value in red.
+* "Cost to Fill" displays how much it will cost to fill the tank once a location is reached, using location fuel cost, tank size, and remaining fuel in the vehicle's tank. If "Fuel Remaining" is negative, this column will display "Out of Range"
 
 In "Expanded Mode" the list is ordered by Cost to Fill, in case you **REALLY** want to optimize your fuel shopping.
